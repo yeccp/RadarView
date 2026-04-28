@@ -126,7 +126,7 @@ RadarView/
 
 ```bash
 # 1. 克隆仓库 Clone
-git clone https://github.com/<org>/RadarView.git
+git clone https://github.com/yeccp/RadarView.git
 cd RadarView
 
 # 2. 安装前端依赖 Install dependencies
