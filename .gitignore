@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+src-tauri/target/
+
+# Offline tiles (体积大，不入库，单独分发)
+tiles/*.mbtiles
+
+# Tile generation temp files
+scripts/temp/
+
+# Environment
+.env
+*.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
