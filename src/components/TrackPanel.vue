@@ -6,18 +6,31 @@
       <span class="collapse-icon">{{ collapsed ? '◀' : '▶' }}</span>
     </div>
     <div v-if="!collapsed" class="panel-body">
-      <template v-if="tracks.length === 0">
-        <p class="placeholder-text">航迹数据加载后将在此显示目标列表</p>
+      <div class="search-bar">
+        <input
+          v-model="searchQuery"
+          type="text"
+          class="search-input"
+          placeholder="搜索 ICAO / 航班号 / 注册号 / 机型…"
+        />
+        <span v-if="searchQuery" class="search-clear" @click="searchQuery = ''">×</span>
+      </div>
+      <div v-if="isolatedId" class="isolate-banner">
+        <span>🔍 单独查看: {{ isolatedLabel }}</span>
+        <button class="isolate-back-btn" @click="$emit('clearIsolation')">返回全部</button>
+      </div>
+      <template v-if="filteredList.length === 0">
+        <p class="placeholder-text">{{ searchQuery ? '无匹配结果' : '航迹数据加载后将在此显示目标列表' }}</p>
       </template>
       <template v-else>
         <div class="track-list">
           <div
-            v-for="track in tracks"
+            v-for="track in filteredList"
             :key="track.id"
             class="track-item"
             :class="{ selected: selectedId === track.id }"
           >
-            <div class="track-item-main" @click="$emit('select', track.id)">
+            <div class="track-item-main" @click="$emit('isolate', track.id)">
               <div class="track-item-top">
                 <span class="track-color" :style="{ background: sourceColors[track.source] }"></span>
                 <span class="track-id">{{ track.metadata.flightNumber || track.id }}</span>
@@ -76,20 +89,48 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { Track, DataSource } from '../types/track'
 
-defineProps<{
+const props = defineProps<{
   tracks: Track[]
   selectedId: string | null
+  isolatedId: string | null
 }>()
 
 defineEmits<{
-  select: [id: string]
+  isolate: [id: string]
+  clearIsolation: []
 }>()
 
 const collapsed = ref(false)
 const expandedId = ref<string | null>(null)
+const searchQuery = ref('')
+
+const isolatedLabel = computed(() => {
+  if (!props.isolatedId) return ''
+  const track = props.tracks.find(t => t.id === props.isolatedId)
+  if (!track) return props.isolatedId
+  return track.metadata.flightNumber || track.metadata.registration || track.id
+})
+
+const filteredList = computed(() => {
+  const q = searchQuery.value.trim().toLowerCase()
+  if (!q) return props.tracks
+
+  return props.tracks.filter((t) => {
+    if (t.id.toLowerCase().includes(q)) return true
+    const m = t.metadata
+    if (m.flightNumber?.toLowerCase().includes(q)) return true
+    if (m.registration?.toLowerCase().includes(q)) return true
+    if (m.aircraftType?.toLowerCase().includes(q)) return true
+    if (m.airline?.toLowerCase().includes(q)) return true
+    if (m.icaoFlightNumber?.toLowerCase().includes(q)) return true
+    if (m.origin?.toLowerCase().includes(q)) return true
+    if (m.destination?.toLowerCase().includes(q)) return true
+    return false
+  })
+})
 
 const sourceColors: Record<DataSource, string> = {
   adsb: '#00d4ff',
@@ -162,6 +203,74 @@ function lastSpeed(track: Track): string {
 .panel-body {
   flex: 1;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-bar {
+  position: relative;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.search-input {
+  width: 100%;
+  padding: 7px 28px 7px 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text);
+  font-size: 12px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-input::placeholder {
+  color: var(--color-text-dim);
+}
+
+.search-input:focus {
+  border-color: var(--color-accent);
+}
+
+.search-clear {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-dim);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.search-clear:hover {
+  color: var(--color-text);
+}
+
+.isolate-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: rgba(0,212,255,0.1);
+  border-bottom: 1px solid rgba(0,212,255,0.2);
+  font-size: 12px;
+  color: var(--color-accent);
+}
+
+.isolate-back-btn {
+  padding: 3px 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-text);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.isolate-back-btn:hover {
+  background: rgba(255,255,255,0.18);
 }
 
 .placeholder-text {

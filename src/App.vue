@@ -38,7 +38,13 @@
     </div>
 
     <div class="layout-right">
-      <TrackPanel :tracks="displayTracks" :selected-id="selectedId" @select="onSelectTrack" />
+      <TrackPanel
+        :tracks="tracks"
+        :selected-id="selectedId"
+        :isolated-id="isolatedTrackId"
+        @isolate="onIsolateTrack"
+        @clear-isolation="onClearIsolation"
+      />
     </div>
 
     <div class="layout-bottom">
@@ -96,14 +102,20 @@ interface Batch {
 
 const mapRef = ref<InstanceType<typeof CesiumMap>>()
 const loader = useTrackLoader()
-const { tracks, trackCount, selectedId, addTracks, selectTrack, clearAll, setAll, tracksBySource } = useTracks()
+const { tracks, trackCount, selectedId, isolatedTrackId, addTracks, clearAll, setAll, isolateTrack, clearIsolation, tracksBySource } = useTracks()
 const { filteredTracks } = useTrackFilter(tracks)
 const { showLabels, toggle: toggleLabels } = useLabelVisibility()
 const errorMsg = ref('')
 const batches = ref<Batch[]>([])
 const showBatchPanel = ref(false)
 
-const displayTracks = computed(() => filteredTracks.value)
+const displayTracks = computed(() => {
+  if (isolatedTrackId.value) {
+    const t = tracks.value.find(tr => tr.id === isolatedTrackId.value)
+    return t ? [t] : []
+  }
+  return filteredTracks.value
+})
 
 const adsbTracks = computed(() => tracksBySource.value.adsb ?? [])
 const radarTracks = computed(() => tracksBySource.value.radar ?? [])
@@ -162,10 +174,14 @@ async function handleLoadBatch(id: number) {
   } catch (e) { errorMsg.value = String(e) }
 }
 
-function onSelectTrack(id: string) {
-  selectTrack(id)
+function onIsolateTrack(id: string) {
+  isolateTrack(id)
   const track = tracks.value.find((t) => t.id === id)
   if (track) mapRef.value?.flyToTrack(track)
+}
+
+function onClearIsolation() {
+  clearIsolation()
 }
 
 function onClear() {

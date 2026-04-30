@@ -3,6 +3,7 @@ import type { Track } from '../types/track'
 
 const tracks = ref<Track[]>([])
 const selectedId = ref<string | null>(null)
+const isolatedTrackId = ref<string | null>(null)
 
 export function useTracks() {
   const trackCount = computed(() => tracks.value.length)
@@ -14,6 +15,11 @@ export function useTracks() {
   const selectedTrack = computed(() => {
     if (!selectedId.value) return null
     return tracks.value.find((t) => t.id === selectedId.value) ?? null
+  })
+
+  const isolatedTrack = computed(() => {
+    if (!isolatedTrackId.value) return null
+    return tracks.value.find((t) => t.id === isolatedTrackId.value) ?? null
   })
 
   const tracksBySource = computed(() => {
@@ -60,14 +66,25 @@ export function useTracks() {
     selectedId.value = id
   }
 
+  function isolateTrack(id: string) {
+    isolatedTrackId.value = id
+    selectedId.value = id
+  }
+
+  function clearIsolation() {
+    isolatedTrackId.value = null
+  }
+
   function clearAll() {
     tracks.value = []
     selectedId.value = null
+    isolatedTrackId.value = null
   }
 
   function setAll(newTracks: Track[]) {
     tracks.value = newTracks
     selectedId.value = null
+    isolatedTrackId.value = null
   }
 
   return {
@@ -76,10 +93,14 @@ export function useTracks() {
     totalPoints,
     selectedId,
     selectedTrack,
+    isolatedTrackId,
+    isolatedTrack,
     tracksBySource,
     addTracks,
     removeTrack,
     selectTrack,
+    isolateTrack,
+    clearIsolation,
     clearAll,
     setAll,
   }
