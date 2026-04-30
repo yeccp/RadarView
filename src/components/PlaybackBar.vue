@@ -23,6 +23,15 @@
       >
         {{ s }}x
       </button>
+      <input
+        class="custom-speed-input"
+        type="number"
+        min="1"
+        :value="speed"
+        @keydown.enter="onCustomSpeed"
+        @blur="onCustomSpeed"
+        title="自定义倍速，回车生效"
+      />
     </div>
   </div>
 </template>
@@ -66,6 +75,11 @@ function onMouseDown(e: MouseEvent) {
 
   document.addEventListener('mousemove', onMove)
   document.addEventListener('mouseup', onUp)
+}
+
+function onCustomSpeed(e: Event) {
+  const val = parseInt((e.target as HTMLInputElement).value, 10)
+  if (val >= 1) emit('speed', val)
 }
 </script>
 
@@ -169,6 +183,30 @@ function onMouseDown(e: MouseEvent) {
 .speed-btn.active {
   background: var(--color-accent);
   color: var(--color-bg);
+  border-color: var(--color-accent);
+}
+
+.custom-speed-input {
+  width: 52px;
+  padding: 3px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text);
+  font-size: 11px;
+  font-family: 'Cascadia Code', 'Fira Code', monospace;
+  text-align: center;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.custom-speed-input::-webkit-outer-spin-button,
+.custom-speed-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.custom-speed-input:focus {
   border-color: var(--color-accent);
 }
 </style>

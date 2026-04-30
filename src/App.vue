@@ -9,6 +9,9 @@
     <LayerControl />
 
     <div class="right-bar">
+      <button v-if="isolatedTrackId" class="side-btn back-all-btn" @click="onClearIsolation">
+        返回全部航迹
+      </button>
       <button class="side-btn adsb-btn" @click="handleImportAdsb" :disabled="loader.loading.value">
         {{ loader.loading.value ? `Importing ${loader.progress.value}%` : 'Import ADS-B' }}
       </button>
@@ -222,6 +225,7 @@ async function onDrop(_e: DragEvent) {
 .side-btn:hover:not(:disabled) { opacity:0.85; }
 .side-btn:disabled { opacity:0.5; cursor:not-allowed; }
 .side-btn.clear-btn { background:rgba(255,255,255,0.1); color:var(--color-text); }
+.side-btn.back-all-btn { background:rgba(0,212,255,0.15); color:#00d4ff; border:1px solid rgba(0,212,255,0.3); }
 .side-btn.util-btn { background:rgba(255,255,255,0.08); color:var(--color-text-dim); border:1px solid rgba(255,255,255,0.15); }
 .error-msg { color:#f44; font-size:11px; text-align:center; word-break:break-all; }
 

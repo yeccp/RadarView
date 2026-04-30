@@ -9,7 +9,7 @@ export interface ReplayPosition {
   t: number
 }
 
-const SPEED_OPTIONS = [50, 100, 200, 500] as const
+const SPEED_OPTIONS = [100, 300, 500, 2000] as const
 
 function binarySearch(points: TrackPoint[], targetTime: number): ReplayPosition {
   if (points.length === 0) return { point: null, index: -1, t: 0 }
@@ -55,7 +55,7 @@ function interpolatePosition(pos: ReplayPosition, points: TrackPoint[]): TrackPo
 export function useReplay(tracks: Ref<Track[]>) {
   const isPlaying = ref(false)
   const currentTime = ref(0)
-  const speed = ref(1)
+  const speed = ref(500)
   const speedOptions = SPEED_OPTIONS
 
   const timeRange = computed(() => {
