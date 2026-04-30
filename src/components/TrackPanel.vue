@@ -147,15 +147,22 @@ function toggleExpand(id: string) {
 }
 
 function lastAlt(track: Track): string {
-  const last = track.positions[track.positions.length - 1]
-  if (!last) return ''
-  const ft = last.altitude / 0.3048
-  return ft >= 1000 ? `FL${Math.round(ft / 100)}` : `${Math.round(ft)}ft`
+  for (let i = track.positions.length - 1; i >= 0; i--) {
+    const alt = track.positions[i].altitude
+    if (alt > 0) {
+      const ft = alt / 0.3048
+      return ft >= 1000 ? `FL${Math.round(ft / 100)}` : `${Math.round(ft)}ft`
+    }
+  }
+  return ''
 }
 
 function lastSpeed(track: Track): string {
-  const last = track.positions[track.positions.length - 1]
-  return last ? `${last.groundSpeed}kt` : ''
+  for (let i = track.positions.length - 1; i >= 0; i--) {
+    const spd = track.positions[i].groundSpeed
+    if (spd > 0) return `${spd}kt`
+  }
+  return ''
 }
 </script>
 
