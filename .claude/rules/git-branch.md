@@ -6,10 +6,12 @@
 
 | 分支 | 用途 | 保护规则 |
 |------|------|----------|
-| `main` | 稳定版本，可随时发布 | 禁止直接 push，只接受来自 `dev` 的 PR |
-| `dev` | 日常开发集成分支 | 禁止 force push，PR 需至少 1 人 Review |
+| `main` | 稳定版本，可随时发布 | 禁止直接 push（管理员可绕过），只接受 PR，需至少 1 人 Review |
+| `dev` | 日常开发集成分支 | 默认开发分支，feature/fix 分支 PR 合入此分支 |
 | `feature/*` | 新功能开发 | 从 `dev` 创建，完成后 PR 回 `dev` |
 | `fix/*` | Bug 修复 | 同 feature，紧急修复可直接 PR 到 `main` |
+
+> 以上保护规则已通过 GitHub Branch Protection 强制生效。
 
 ## 日常开发流程
 
