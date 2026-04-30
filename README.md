@@ -195,10 +195,10 @@ python scripts/download_tiles.py --key YOUR_TIANDITU_KEY --max-zoom 8
 
 ## Git 协作规范 | Git Workflow
 
-> 详细规范见 `rules/` 目录：
-> - [分支策略](rules/git-branch.md)
-> - [Commit 规范](rules/commit-convention.md)
-> - [Code Review 规范](rules/code-review.md)
+> 详细规范见 `.claude/rules/` 目录：
+> - [分支策略](.claude/rules/git-branch.md)
+> - [Commit 规范](.claude/rules/commit-convention.md)
+> - [Code Review 规范](.claude/rules/code-review.md)
 
 ---
 

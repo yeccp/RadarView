@@ -1,23 +1,16 @@
 # 里程碑 | Milestones
 
-2-3 人并行开发，总周期约 2.5 周。
-
-```
-         Day1─2       Day3─5       Day6─8       Day9─11      Day12+
-成员A:   ┣━ M1 脚手架 ━┫┣━━ M2 ADS-B 接入 ━━┫┣━ M4 回放 ━━┫┣━ 联调 ━┫
-成员B:   ┣━ M1 瓦片  ━━┫┣━━ M3 雷达接入 ━━━━┫┣━ M4 对齐 ━━┫┣━ 联调 ━┫
-成员C:                  ┣━━ M5 UI 面板 ━━━━━━━━━━━━━━━━━━━━┫┣━ 联调 ━┫
-```
-
 ---
 
-## M1 — 项目脚手架 + Cesium 地球 + 离线瓦片（A+B 并行，2 天）
+## M1 — 项目脚手架 + Cesium 地球 + 离线瓦片
 
 ### 环境搭建
+
 - [ ] 安装 pnpm、Rust 工具链、Tauri CLI
 - [ ] 确认 Node.js >= 18、Rust >= 1.70
 
-### 前端初始化（成员 A）
+### 前端初始化
+
 - [ ] 使用 Vite 创建 Vue 3 + TypeScript 项目
 - [ ] 安装 Cesium.js + vite-plugin-cesium
 - [ ] 创建基础目录结构（components / composables / types）
@@ -25,21 +18,21 @@
 - [ ] 创建骨架占位组件：`TrackPanel.vue`、`PlaybackBar.vue`、`LayerControl.vue`
 - [ ] 创建 `src/types/track.ts` 航迹类型定义
 
-### Tauri 后端初始化（成员 B）
+### Tauri 后端初始化
 - [ ] `pnpm tauri init` 初始化 src-tauri 目录
 - [ ] 配置 `tauri.conf.json`（窗口标题、尺寸、安全策略）
 - [ ] 添加 Cargo 依赖：rusqlite、serde、serde_json
 - [ ] 创建骨架 Rust 模块：adsb.rs、radar.rs、track.rs、time_align.rs、replay.rs、db.rs
 - [ ] 实现 `tile_server.rs`：从 MBTiles 读取瓦片，提供本地 HTTP 服务
 
-### 联合验证
+### 验证
 - [ ] `pnpm tauri dev` 启动桌面窗口
 - [ ] Cesium 3D 地球正常渲染
 - [ ] 离线瓦片（natural_earth.mbtiles）加载显示正常
 
 ---
 
-## M2 — ADS-B 数据接入 + 航迹渲染（A，3 天）
+## M2 — ADS-B 数据接入 + 航迹渲染
 
 ### Rust 解析层
 - [ ] 实现 `adsb.rs`：解析 CSV 文件（19 列字段，参见 docs/adsb-format.md）
@@ -59,7 +52,7 @@
 
 ---
 
-## M3 — 雷达数据接入 + 多源分类标注（B，3 天）
+## M3 — 雷达数据接入 + 多源分类标注
 
 ### Rust 解析层
 - [ ] 实现 `radar.rs`：解析 .mat 文件，提取雷达航迹数据
@@ -78,15 +71,15 @@
 
 ---
 
-## M4 — 文件导入 + 时间对齐 + 回放功能（A+B 并行，3 天）
+## M4 — 文件导入 + 时间对齐 + 回放功能
 
-### 文件导入 UI（成员 A）
+### 文件导入 UI
 - [ ] 前端实现文件选择对话框（Tauri dialog API）
 - [ ] 支持拖拽导入 .csv / .mat 文件
 - [ ] 导入后自动识别文件类型，调用对应解析器
 - [ ] 导入进度提示
 
-### 时间对齐（成员 B）
+### 时间对齐
 - [ ] 实现 `time_align.rs`：多源数据时间戳自动对齐算法
 - [ ] 支持手动偏移量微调（前端传入 offset_ms 参数）
 - [ ] 对齐后的航迹按统一时间轴排序
@@ -104,7 +97,7 @@
 
 ---
 
-## M5 — UI 完善（C，与 M2-M4 同步进行）
+## M5 — UI 完善
 
 ### 图层控制面板
 - [ ] 实现 `LayerControl.vue`：按数据源分组的开关列表
@@ -129,7 +122,7 @@
 
 ---
 
-## M6 — 联调 + 集成测试 + 打包发布（全员，2 天）
+## M6 — 联调 + 集成测试 + 打包发布
 
 ### 联调
 - [ ] 多源数据（ADS-B + 雷达）同时导入联调
