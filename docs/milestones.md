@@ -5,10 +5,12 @@
 ## M1 — 项目脚手架 + Cesium 地球 + 离线瓦片
 
 ### 环境搭建
+
 - [ ] 安装 pnpm、Rust 工具链、Tauri CLI
 - [ ] 确认 Node.js >= 18、Rust >= 1.70
 
 ### 前端初始化
+
 - [ ] 使用 Vite 创建 Vue 3 + TypeScript 项目
 - [ ] 安装 Cesium.js + vite-plugin-cesium
 - [ ] 创建基础目录结构（components / composables / types）
